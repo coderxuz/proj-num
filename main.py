@@ -22,6 +22,8 @@ while first_random == True:
 comp_attempts = 0
 while first_random == False:
     print('pls think 1 number')
+    comp_rand = r.randint(0,10)
+    print(f'My number {comp_rand}')
     user_check = input('Your number greater(+) or smaller(-) or equal(=)')
     if user_check == '=':
         comp_attempts += 1
@@ -33,4 +35,8 @@ while first_random == False:
              print(f"You are won your attempts {attempts} my attempts {comp_attempts}")
         break
     elif user_check == '+':
-        
+        comp_rand = r.randint(comp_rand, 10)
+        comp_attempts += 1
+    elif user_check == '-':
+        comp_rand = r.randint(0, comp_rand)
+        comp_attempts += 1
