@@ -15,6 +15,16 @@ DATA_FILE = 'products.json'
 bot = telepot.Bot(TELEGRAM_BOT_TOKEN)
 
 class RequestHandler(BaseHTTPRequestHandler):
+    def send_cors_headers(self):
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_cors_headers()
+        self.end_headers()
+
     def do_POST(self):
         if self.path == '/save_product':
             content_length = int(self.headers['Content-Length'])
@@ -29,6 +39,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 expiry_date = datetime.strptime(expiry_date, '%Y-%m-%d').date()
             except ValueError:
                 self.send_response(400)
+                self.send_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'Invalid date format')
                 return
@@ -58,6 +69,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                     bot.sendMessage(CHAT_ID, f"Eslatma: {product['name']} mahsulotining yaroqlilik muddati 1 kun qolgan.")
 
             self.send_response(200)
+            self.send_cors_headers()
             self.send_header('Content-type', 'application/json')
             self.end_headers()
             self.wfile.write(b'{"status": "success"}')
