@@ -17,13 +17,27 @@ bot = telepot.Bot(TELEGRAM_BOT_TOKEN)
 class RequestHandler(BaseHTTPRequestHandler):
     def send_cors_headers(self):
         self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
 
     def do_OPTIONS(self):
         self.send_response(200)
         self.send_cors_headers()
         self.end_headers()
+
+    def do_GET(self):
+        # GET so'rovi uchun javob
+        if self.path == '/':
+            self.send_response(200)
+            self.send_cors_headers()
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b'Hello, World!')
+        else:
+            self.send_response(404)
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(b'Not Found')
 
     def do_POST(self):
         if self.path == '/save_product':
